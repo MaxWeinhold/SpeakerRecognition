@@ -43,10 +43,15 @@ for audio_file in Sound_Files:
     plt.colorbar(format="%+2.f")
     plt.show()
     
-    print(mfccs)
+    #Teste ob der Frequenz Output die Mindestgröße hat
+    print(mfccs.size/13)
     
-    #Speichere MFCCs Output als CSV Datei
-    df = pd.DataFrame(mfccs)
-    df.to_csv(r'D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData\TestData.csv')
-    #mfccs.to_csv (r'D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData', index = False, header=True)
+    if mfccs.size/13 > 50:
+        #Alle Outputs auf den selben Stichproben Umfang bringen
+        mfccs_resized=np.resize(mfccs,(13,50))
+    
+        #Speichere MFCCs Output als CSV Datei
+        df = pd.DataFrame(mfccs_resized)
+        df.to_csv(r'D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData\TestData.csv')
+        #mfccs.to_csv (r'D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData', index = False, header=True)
     
