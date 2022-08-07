@@ -12,16 +12,19 @@ import IPython.display as ipd
 import matplotlib.pyplot as plt
 import numpy as np
 
-#Bibliothek um CSV Dateien zu speichen
+#Bibliothek um CSV Dateien zu lesen und zu speichen
 import pandas as pd
+import csv
+
+#Liess die CSV Datei, die alle Namen der SoundFiles enthält
+with open('D:\STUDIUM\Münster\VPRonaRaspberryPi\EmoDB\wav\\file_list.csv', newline='') as f:
+    reader = csv.reader(f)
+    data = list(reader)
+
+print(data)
 
 #Dateinamen
-Sound_Files = [r"\09b09Nd", 
-               r"\03a02Wb", 
-               r"\08b01Wa",
-               r"\08b02Tc",
-               r"\11a05Ad"
-               ]
+Sound_Files=data
 
 i=0
 
@@ -32,10 +35,9 @@ for audio_file in Sound_Files:
     print(str(i/len(Sound_Files)*100)+" %")
     
     #Dateipfad
-    str1 = "D:\STUDIUM\Münster\VPRonaRaspberryPi\EmoDB\wav"
-    str2 = ".wav"
-    #str3 = audiofile
-    wavFileName= str1 + audio_file + str2
+    str1 = "D:\STUDIUM\Münster\VPRonaRaspberryPi\EmoDB\wav\\"
+
+    wavFileName = str1 + audio_file[0]
     
     ipd.Audio(wavFileName,) 
 
@@ -45,14 +47,6 @@ for audio_file in Sound_Files:
     #Extracting MFCCs
     mfccs = librosa.feature.mfcc(y=signal, n_mfcc=13, sr=sr)
     mfccs.shape
-
-    #Visualising MFCCs
-    #plt.figure(figsize=(25, 10))
-    #librosa.display.specshow(mfccs, 
-    #                         x_axis="time", 
-    #                         sr=sr)
-    #plt.colorbar(format="%+2.f")
-    #plt.show()
     
     #Teste ob der Frequenz Output die Mindestgröße hat
     if mfccs.size/13 > 50:
@@ -62,6 +56,6 @@ for audio_file in Sound_Files:
         #Speichere MFCCs Output als CSV Datei
         df = pd.DataFrame(mfccs_resized)
         #Dateipfad
-        filename="D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData"+audio_file+".csv"
+        filename="D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData\\"+audio_file[0]+".csv"
         df.to_csv(filename)
     
