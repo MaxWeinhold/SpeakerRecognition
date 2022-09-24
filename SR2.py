@@ -28,6 +28,10 @@ Sound_Files=data
 
 i=0
 
+#bigDF = np.empty((0, 13*50))
+big_array = np.empty((len(Sound_Files), 13*50))
+#lst = []
+
 for audio_file in Sound_Files:
     
     #Fortschrittsanzeige
@@ -53,9 +57,26 @@ for audio_file in Sound_Files:
         #Alle Outputs auf den selben Stichproben Umfang bringen
         mfccs_resized=np.resize(mfccs,(13,50))
     
+        #Kovertiere den zwei diemnsionalen Array in eine Dimension
+        flat_array = mfccs_resized.flatten()
+    
         #Speichere MFCCs Output als CSV Datei
-        df = pd.DataFrame(mfccs_resized)
+        df = pd.DataFrame(flat_array)
         #Dateipfad
         filename="D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData\\"+audio_file[0]+".csv"
         df.to_csv(filename)
+        
+        #Kombiniere alle Outputs
+        big_array[i-1]=flat_array
+        big_array=big_array
+        
+        #Speichere Nummer der Stimme
+        name = audio_file[0]+"name"
+        big_array[i-1][0]=name[:2]
+        
+        #Speichere MFCCs Output als CSV Datei
+        bigDF = pd.DataFrame(big_array)
+        #Dateipfad
+        filename="D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData\\Test.csv"
+        bigDF.to_csv(filename)
     
