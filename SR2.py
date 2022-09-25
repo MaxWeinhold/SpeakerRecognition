@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 import csv
 
-#Liess die CSV Datei, die alle Namen der SoundFiles enthält
+#Ließ die CSV Datei, die alle Namen der SoundFiles enthält
 with open('D:\STUDIUM\Münster\VPRonaRaspberryPi\EmoDB\wav\\file_list.csv', newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
