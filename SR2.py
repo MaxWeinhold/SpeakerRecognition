@@ -28,8 +28,13 @@ Sound_Files=data
 
 i=0
 
+#Variable Adjustments
+mfcc_freq_quantity = 26
+minimum_size = 50
+
+
 #bigDF = np.empty((0, 13*50))
-big_array = np.empty((len(Sound_Files), 13*50))
+big_array = np.empty((len(Sound_Files), mfcc_freq_quantity*minimum_size))
 #lst = []
 
 for audio_file in Sound_Files:
@@ -49,13 +54,13 @@ for audio_file in Sound_Files:
     signal, sr = librosa.load(wavFileName)
 
     #Extracting MFCCs
-    mfccs = librosa.feature.mfcc(y=signal, n_mfcc=13, sr=sr)
+    mfccs = librosa.feature.mfcc(y=signal, n_mfcc=mfcc_freq_quantity, sr=sr)
     mfccs.shape
     
     #Teste ob der Frequenz Output die Mindestgröße hat
-    if mfccs.size/13 > 50:
+    if mfccs.size/mfcc_freq_quantity > minimum_size:
         #Alle Outputs auf den selben Stichproben Umfang bringen
-        mfccs_resized=np.resize(mfccs,(13,50))
+        mfccs_resized=np.resize(mfccs,(mfcc_freq_quantity,minimum_size))
     
         #Kovertiere den zwei diemnsionalen Array in eine Dimension
         flat_array = mfccs_resized.flatten()
@@ -76,6 +81,10 @@ for audio_file in Sound_Files:
         
         #Speichere MFCCs Output als CSV Datei
         bigDF = pd.DataFrame(big_array)
+        
+        for j in range(len(bigDF.index)):
+           bigDF[0][j]="Voice"+str(bigDF[0][j])
+        
         #Dateipfad
         filename="D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData\\Test.csv"
         bigDF.to_csv(filename)

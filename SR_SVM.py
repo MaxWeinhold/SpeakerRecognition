@@ -40,7 +40,7 @@ sound_columns = voice_data.iloc[: , 1:]
 X_tr, X_tst, y_tr, y_tst = tts(sound_columns , voice_column , test_size=25/100,random_state=109)
 
 ###Creating Support Vector Machine Model
-clf = svm.SVC(kernel='rbf')
+clf = svm.SVC(kernel='poly', degree=8)
 
 ###Training the Model
 clf.fit(X_tr, y_tr)
