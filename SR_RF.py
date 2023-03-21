@@ -22,8 +22,8 @@ with open("D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData\\Test
     data = list(reader)
         
 voice_data = pd.DataFrame(data)
-voice_column = voice_data.iloc[:, 0]
-sound_columns = voice_data.iloc[: , 1:]
+voice_column = voice_data.iloc[:, 1]
+sound_columns = voice_data.iloc[: , 2:]
 
 ###Splitting train/test data
 X_tr, X_tst, y_tr, y_tst = tts(sound_columns , voice_column , test_size=25/100,random_state=109)

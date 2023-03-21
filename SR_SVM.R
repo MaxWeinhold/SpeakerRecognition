@@ -14,7 +14,7 @@ rm(list=ls())
 
 #Load Data
 setwd("D:/ComicandSonsProductions/GameJam1/SpeakerRecognition/TestData")
-VoiceData = read.csv(file = "Test.csv",sep=",")
+VoiceData = read.csv(file = "Frequencies90.csv",sep=",")
 
 VoiceData[1]=NULL
 names(VoiceData)[1]="Voice"

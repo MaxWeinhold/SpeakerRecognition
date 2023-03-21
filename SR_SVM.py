@@ -28,19 +28,19 @@ from sklearn import svm
 from sklearn import metrics
 
 #Ließ die CSV Datei, die alle Namen der SoundFiles enthält
-with open("D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData\\Test.csv", newline='') as f:
+with open("D:\ComicandSonsProductions\GameJam1\SpeakerRecognition\TestData\\Frequencies60.csv", newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
 
 voice_data = pd.DataFrame(data)
-voice_column = voice_data.iloc[:, 0]
-sound_columns = voice_data.iloc[: , 1:]
+voice_column = voice_data.iloc[:, 1]
+sound_columns = voice_data.iloc[: , 2:]
 
 ###Splitting train/test data
 X_tr, X_tst, y_tr, y_tst = tts(sound_columns , voice_column , test_size=25/100,random_state=109)
 
 ###Creating Support Vector Machine Model
-clf = svm.SVC(kernel='poly', degree=8)
+clf = svm.SVC(kernel='rbf', shrinking=True)
 
 ###Training the Model
 clf.fit(X_tr, y_tr)
