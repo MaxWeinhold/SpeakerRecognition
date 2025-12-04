@@ -102,7 +102,7 @@ for (f in files) {
 #===============================
 df <- as.data.frame(do.call(rbind, features_list))
 
-colnames(df) <- c("file", paste0("mfcc_","voice","emotion", 0:(N_MFCC*window_size)))
+colnames(df) <- c("file","voice","emotion", paste0("mfcc_", 1:(N_MFCC*window_size)))
 nrow(df)
 
 write.csv(df, output_file, row.names = FALSE)
