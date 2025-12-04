@@ -15,12 +15,12 @@ if (length(new.packages)) install.packages(new.packages)
 lapply(needed_packages, require, character.only = TRUE)
 
 #===============================
-# Config
+# Config and load data
 #===============================
 N_MFCC <- 20
 
 input_dir <- "D:/STUDIUM/Münster/VPRonaRaspberryPi/EmoDB/wav"
-output_file <- "features_r.csv"
+output_file <- "features/features_r.csv"
 
 files <- list.files(input_dir, pattern = "\\.wav$", full.names = TRUE)
 
@@ -33,9 +33,13 @@ features_list <- list()
 #===============================
 # Main loop — MFCC extraction
 #===============================
+
+
+f=files[1]
 for (f in files) {
   cat("Verarbeite:", basename(f), "\n")
   
+  #load single wave file
   wav <- readWave(f)
   
   # Mono erzwingen
@@ -51,10 +55,46 @@ for (f in files) {
   )
   
   # melfcc gibt ein Matrix-Objekt zurück (Frames x Coeffs)
-  feature_vec <- colMeans(mfcc_result)
+  #feature_vec <- colMeans(mfcc_result)
+  feature_vec <- mfcc_result
   
-  row <- c(file = basename(f), feature_vec)
-  features_list[[length(features_list) + 1]] <- row
+  window_size <- 10
+  i=10
+  # i springt in Schritten von window_size → kein Overlap!
+  for (i in seq(window_size, nrow(feature_vec), by = window_size)) {
+    
+    # Fenster definieren
+    frame_range <- (i - window_size + 1):i
+    
+    # MFCC-Frames in Vektor umwandeln
+    feature_sub_vec <- as.vector(t(feature_vec[frame_range, ]))
+    
+    # Sprecher extrahieren
+    speaker_label <- substr(basename(f), 1, 2)
+    
+    # Emotion extrahieren
+    emotion_label <- substr(basename(f), 6, 6)
+    if(emotion_label=="A"){
+      emotion_label="fear"    
+    }else if(emotion_label=="E"){
+      emotion_label="disgust"      
+    }else if(emotion_label=="F"){
+      emotion_label="happiness"      
+    }else if(emotion_label=="L"){
+      emotion_label="boredom"      
+    }else if(emotion_label=="N"){
+      emotion_label="neutral"      
+    }else if(emotion_label=="T"){
+      emotion_label="sadness"      
+    }else if(emotion_label=="W"){
+      emotion_label="anger"      
+    }
+    # Zeile speichern
+    row <- c(file = basename(f), speaker_label, emotion_label, feature_sub_vec)
+    
+    features_list[[length(features_list) + 1]] <- row
+  }
+  
 }
 
 #===============================
@@ -62,7 +102,8 @@ for (f in files) {
 #===============================
 df <- as.data.frame(do.call(rbind, features_list))
 
-colnames(df) <- c("file", paste0("mfcc_", 1:N_MFCC))
+colnames(df) <- c("file", paste0("mfcc_","voice","emotion", 0:(N_MFCC*window_size)))
+nrow(df)
 
 write.csv(df, output_file, row.names = FALSE)
 
